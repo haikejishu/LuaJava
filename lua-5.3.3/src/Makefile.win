@@ -1,0 +1,95 @@
+#
+# NMake makefile for the LuaJava Windows Distribution
+#
+
+include config.win
+
+
+#
+# Other variables.
+#
+CLASSES     = \
+	src/java/org/keplerproject/luajava/CPtr.class \
+	src/java/org/keplerproject/luajava/JavaFunction.class \
+	src/java/org/keplerproject/luajava/LuaException.class \
+	src/java/org/keplerproject/luajava/LuaInvocationHandler.class \
+	src/java/org/keplerproject/luajava/LuaJavaAPI.class \
+	src/java/org/keplerproject/luajava/LuaObject.class \
+	src/java/org/keplerproject/luajava/LuaState.class \
+	src/java/org/keplerproject/luajava/LuaStateFactory.class \
+	src/java/org/keplerproject/luajava/Console.class
+	
+DOC_CLASSES = \
+	src/java/org/keplerproject/luajava/JavaFunction.java \
+	src/java/org/keplerproject/luajava/LuaException.java \
+	src/java/org/keplerproject/luajava/LuaInvocationHandler.java \
+	src/java/org/keplerproject/luajava/LuaObject.java \
+	src/java/org/keplerproject/luajava/LuaState.java \
+	src/java/org/keplerproject/luajava/LuaStateFactory.java \
+	src/java/org/keplerproject/luajava/Console.java
+	
+	
+LUA_LIB =lapi.c lcode.c lctype.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c \
+ lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c ltm.c lundump.c lvm.c \
+ lzio.c lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c lmathlib.c \
+ loslib.c lstrlib.c ltablib.c loadlib.c linit.c 
+
+	
+SOURCE=lapi.c lcode.c lctype.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c \
+ lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c ltm.c lundump.c lvm.c \
+ lzio.c lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c lmathlib.c \
+ loslib.c lstrlib.c ltablib.c loadlib.c linit.c luajava.c	
+
+	
+OBJS        = src\c\luajava.obj
+.SUFFIXES: .java  .class
+
+#
+# Targets
+#
+run: build 
+	@echo ------------------
+	@echo Build Complete
+	@echo ------------------
+
+
+build: checkjdk $(CLASSES)  $(JAR_FILE)   $(SO_FILE) clean 
+
+#
+# Build .class files.
+#
+.java.class:
+	"$(JDK)\bin\javac" -sourcepath ./src/java $*.java
+	
+
+#
+# Create the JAR
+#
+$(JAR_FILE):
+	cd src/java
+	"$(JDK)\bin\jar" cvf ../../$(JAR_FILE) org/keplerproject/luajava/*.class
+	cd ..
+	cd ..
+
+ 
+# link
+luajava : $(SOURCE:.c=.obj) 
+      Link  /dll $** /out:luajava-1.1 
+
+# Build .c files.
+#
+$(SO_FILE): $(LUA_LIB:.c=.obj)  $(OBJS)
+	Link  /dll $** /out:luajava-1.1 
+#	link  /dll  /NODEFAULTLIB:"MSVCRT.lib" -out:$@ "$**"
+
+	
+
+src/c/luajava.h:
+	"$(JDK)\bin\javah" -o src/c/luajava.h -classpath "$(JAR_FILE)" org.keplerproject.luajava.LuaState
+  
+checkjdk: "$(JDK)\bin\java.exe"
+
+clean:
+	-@del src\java\org\keplerproject\luajava\*.class src\c\*.obj *.pdb *.exp *.lib *.exp *.ilk
+
+# $Id: Makefile.win,v 1.1 2006-12-22 14:06:40 thiago Exp $

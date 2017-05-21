@@ -1,0 +1,97 @@
+
+
+
+LUA_SRC="./lua-5.3.3/src"
+JDK= $(JAVA_HOME)
+INCS= -I"$(JDK)/include" -I"$(JDK)/include/win32" -I"$(LUA_SRC)"
+CFLAGS= -nologo -DWIN32 -DLUA_COMPAT_5_1 -DLUA_COMPAT_5_2  $(INCS) -Fosrc\c\ -MD  
+
+
+
+VERSION= 1.1
+PKG= luajava-$(VERSION)
+JAR_FILE= $(PKG).jar
+SO_FILE= $(PKG).dll
+DIST_DIR= $(PKG)
+
+
+CLASSES     = \
+	src/java/org/keplerproject/luajava/CPtr.class \
+	src/java/org/keplerproject/luajava/JavaFunction.class \
+	src/java/org/keplerproject/luajava/LuaException.class \
+	src/java/org/keplerproject/luajava/LuaInvocationHandler.class \
+	src/java/org/keplerproject/luajava/LuaJavaAPI.class \
+	src/java/org/keplerproject/luajava/LuaObject.class \
+	src/java/org/keplerproject/luajava/LuaState.class \
+	src/java/org/keplerproject/luajava/LuaStateFactory.class \
+	src/java/org/keplerproject/luajava/Console.class
+		
+	
+LUA_LIB =lapi.c lcode.c lctype.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c \
+ lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c ltm.c lundump.c lvm.c \
+ lzio.c lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c lmathlib.c \
+ loslib.c lstrlib.c ltablib.c loadlib.c linit.c 
+
+	
+SOURCE=lapi.c lcode.c lctype.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c \
+ lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c ltm.c lundump.c lvm.c \
+ lzio.c lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c lmathlib.c \
+ loslib.c lstrlib.c ltablib.c loadlib.c linit.c lutf8lib.c
+
+	
+OBJS        = src\c\luajava.obj
+.SUFFIXES: .java .class
+.SUFFIXES: .obj .c
+
+#
+# Targets
+#
+run: build 
+	@echo ------------------
+	@echo Build Complete
+	@echo ------------------
+
+
+build: $(CLASSES) $(JAR_FILE) luajava  clean
+
+#
+# Build .class files.   $(JAR_FILE)   $(SO_FILE)
+#	
+.java.class:
+   -@"$(JDK)\bin\javac" -sourcepath ./src/java $*.java
+	
+$(JAR_FILE):
+	cd src/java
+	"$(JDK)\bin\jar" cvf ../../$(JAR_FILE) org/keplerproject/luajava/*.class
+	cd ..
+	cd ..
+
+luadll:
+	 cd  ./lua-5.3.3/src  
+	 cl  /DLUA_BUILD_AS_DLL  /c  $(SOURCE)
+	 Link  /dll $(SOURCE:.c=.obj) /out:lua.dll
+	 cp lua.lib   ../../lua.lib
+	 cp lua.dll  ../../lua.dll
+	 cd ..
+	 cd ..
+
+
+luajava :  $(OBJS) luadll
+      Link  /dll $(OBJS)  lua.lib  /out:luajava-1.1.dll
+
+# Build .c files.
+#
+$(SO_FILE): $(LUA_LIB:.c=.obj)  $(OBJS)
+	cd 
+	Link  /dll $** /out:luajava-1.1.dll
+#	link  /dll  /NODEFAULTLIB:"MSVCRT.lib" -out:$@ "$**"
+
+
+src/c/luajava.h:
+	"$(JDK)\bin\javah" -o src/c/luajava.h -classpath "$(JAR_FILE)" org.keplerproject.luajava.LuaState
+  
+
+clean:
+	-@del src\java\org\keplerproject\luajava\*.class src\c\*.obj *.pdb *.exp *.lib *.exp *.ilk
+
+# $Id: Makefile.win,v 1.1 2006-12-22 14:06:40 thiago Exp $

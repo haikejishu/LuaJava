@@ -1,0 +1,8 @@
+*.obj
+lua.dll
+luajava-1.1.dll
+luajava-1.1.jar
+*.dll
+*.exp
+*.lib
+*.exe
