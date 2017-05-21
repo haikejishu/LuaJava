@@ -1,4 +1,4 @@
-
+﻿
 /******************************************************************************
 * $Id$
 * Copyright (C) 2003-2007 Kepler Project.
@@ -1119,7 +1119,14 @@ int gc( lua_State * L )
       lua_error( L );
    }
 
+
+   printf("%p *pObj  \n",*pObj );
+
    ( *javaEnv )->DeleteGlobalRef( javaEnv , *pObj );
+
+
+
+   printf("%p *pObj  \n",*pObj );
 
    return 0;
 }
@@ -1615,11 +1622,14 @@ int pushJavaClass( lua_State * L , jobject javaObject )
       lua_error( L );
    }
 
-   globalRef = ( *javaEnv )->NewGlobalRef( javaEnv , javaObject );
+   globalRef =  ( *javaEnv )->NewGlobalRef( javaEnv , javaObject );
 
    userData = ( jobject * ) lua_newuserdata( L , sizeof( jobject ) );
+
    *userData = globalRef;
 
+   printf("*userData %p  globalRef %p    userData   %p \n",*userData ,globalRef ,userData );
+   
    /* Creates metatable */
    lua_newtable( L );
 
@@ -1923,6 +1933,7 @@ void pushJNIEnv( JNIEnv * env , lua_State * L )
    if ( !lua_isnil( L , -1 ) )
    {
       udEnv = ( JNIEnv ** ) lua_touserdata( L , -1 );
+      fprintf(stdout, "%p,%p\n", *udEnv , env );
       *udEnv = env;
       lua_pop( L , 1 );
    }
@@ -1931,7 +1942,6 @@ void pushJNIEnv( JNIEnv * env , lua_State * L )
       lua_pop( L , 1 );
       udEnv = ( JNIEnv ** ) lua_newuserdata( L , sizeof( JNIEnv * ) );
       *udEnv = env;
-
       lua_pushstring( L , LUAJAVAJNIENVTAG );
       lua_insert( L , -2 );
       lua_rawset( L , LUA_REGISTRYINDEX );
