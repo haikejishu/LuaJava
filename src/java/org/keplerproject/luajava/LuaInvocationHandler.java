@@ -39,12 +39,12 @@ public class LuaInvocationHandler implements InvocationHandler
 {
 	private LuaObject obj;
 
-	
+
 	public LuaInvocationHandler(LuaObject obj)
 	{
 		this.obj = obj;
 	}
-	
+
 	/**
 	 * Function called when a proxy object function is invoked.
 	 */
@@ -54,12 +54,12 @@ public class LuaInvocationHandler implements InvocationHandler
     {
 	  	String methodName = method.getName();
 	  	LuaObject func    = obj.getField(methodName);
-	  	
+
 	  	if ( func.isNil() )
 	  	{
 	  		return null;
 	  	}
-	  	
+
 	  	Class retType = method.getReturnType();
 	  	Object ret;
 
@@ -77,7 +77,7 @@ public class LuaInvocationHandler implements InvocationHandler
 	  		  ret = LuaState.convertLuaNumber((Double) ret, retType);
 	  		}
 	  	}
-	  	
+
 	  	return ret;
 	  }
   }

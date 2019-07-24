@@ -26,14 +26,14 @@ package org.keplerproject.luajava;
 
 /**
  * LuaJava exception
- *  
+ *
  * @author Thiago Ponte
  *
  */
 public class LuaException extends Exception
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -41,7 +41,7 @@ public class LuaException extends Exception
 	{
 		super(str);
 	}
-	
+
 	/**
 	 * Will work only on Java 1.4 or later.
 	 * To work with Java 1.3, comment the first line and uncomment the second one.
@@ -51,9 +51,9 @@ public class LuaException extends Exception
 	   super((e.getCause() != null) ? e.getCause() : e);
 		//super(e.getMessage());
 	}
-	
+
 	public LuaException(String str, Exception e)
 	{
 		super(str, e);
 	}
-} 
+}
