@@ -31,7 +31,7 @@ import java.io.InputStreamReader;
  * Simple LuaJava console.
  * This is also an example on how to use the Java side of LuaJava and how to startup
  * a LuaJava application.
- * 
+ *
  * @author Thiago Ponte
  */
 public class Console
@@ -39,7 +39,7 @@ public class Console
 
    /**
     * Creates a console for user interaction.
-    * 
+    *
     * @param args	names of the lua files to be executed
     */
    public static void main(String[] args)
@@ -47,6 +47,7 @@ public class Console
       try
       {
          LuaState L = LuaStateFactory.newLuaState();
+
          L.openLibs();
 
          if (args.length > 0)
@@ -81,7 +82,7 @@ public class Console
             {
                synchronized (L)
 					{
-               	ret = L.pcall(0, 0, 0);	
+               	ret = L.pcall(0, 0, 0);
 					}
             }
             if (ret != 0)

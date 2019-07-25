@@ -33,7 +33,7 @@ import java.util.List;
  * and an index is returned. This index is registred in Lua
  * and it is used to find the right LuaState when lua calls
  * a Java Function.
- * 
+ *
  * @author Thiago Ponte
  */
 public final class LuaStateFactory
@@ -42,13 +42,13 @@ public final class LuaStateFactory
 	 * Array with all luaState's instances
 	 */
 	private static final List states = new ArrayList();
-	
+
 	/**
-	 * Non-public constructor. 
+	 * Non-public constructor.
 	 */
 	private LuaStateFactory()
 	{}
-	
+
 	/**
 	 * Method that creates a new instance of LuaState
 	 * @return LuaState
@@ -57,12 +57,12 @@ public final class LuaStateFactory
 	{
 		int i = getNextStateIndex();
 		LuaState L = new LuaState(i);
-		
+
 		states.add(i, L);
-		
+
 		return L;
 	}
-	
+
 	/**
 	 * Returns a existing instance of LuaState
 	 * @param index
@@ -72,7 +72,7 @@ public final class LuaStateFactory
 	{
 		return (LuaState) states.get(index);
 	}
-	
+
 	/**
 	 * Receives a existing LuaState and checks if it exists in the states list.
 	 * If it doesn't exist adds it to the list.
@@ -85,7 +85,7 @@ public final class LuaStateFactory
 		for (i = 0 ; i < states.size() ; i++)
 		{
 			LuaState state = (LuaState) states.get(i);
-			
+
 			if (state != null)
 			{
 				if (state.getCPtrPeer() == L.getCPtrPeer())
@@ -94,12 +94,12 @@ public final class LuaStateFactory
 		}
 
 		i = getNextStateIndex();
-		
+
 		states.set(i, L);
-		
+
 		return i;
 	}
-	
+
 	/**
 	 * removes the luaState from the states list
 	 * @param idx
@@ -108,7 +108,7 @@ public final class LuaStateFactory
 	{
 		states.set(idx, null);
 	}
-	
+
 	/**
 	 * Get next available index
 	 * @return int
@@ -117,7 +117,7 @@ public final class LuaStateFactory
 	{
 		int i;
 		for ( i=0 ; i < states.size() && states.get(i) != null ; i++ );
-		
+
 		return i;
 	}
 }
