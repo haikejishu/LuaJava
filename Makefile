@@ -4,17 +4,17 @@
 
 #############################################################
 #Windows
-LUA_VERSION =5.3.5
-LUA_SRC=lua-$(LUA_VERSION)/src
-JDK= $(JAVA_HOME)
-INCS= -I"$(JDK)/include"  -I"$(JDK)/include/win32"  -I"$(LUA_SRC)"
-CFLAGS= -nologo  -DLUA_COMPAT_5_1 -DLUA_COMPAT_5_2 -DLUA_BUILD_AS_DLL  $(INCS) -Fosrc\c\ -MD
+LUA_VERSION = 5.3.5
+LUA_SRC = lua-$(LUA_VERSION)/src
+JDK = $(JAVA_HOME)
+INCS = -I"$(JDK)/include"  -I"$(JDK)/include/win32"  -I"$(LUA_SRC)"
+CFLAGS = -nologo  -DLUA_COMPAT_5_1 -DLUA_COMPAT_5_2 -DLUA_BUILD_AS_DLL  $(INCS) -Fosrc\c\ -MD
 
 #########################################################
-
-PKG= luajava-$(LUA_VERSION)
-JAR_FILE= $(PKG).jar
-DLL_FILE= $(PKG).dll
+LUAJAVA_VERSION = 1.0
+PKG = luajava-$(LUAJAVA_VERSION)
+JAR_FILE = $(PKG).jar
+DLL_FILE = $(PKG).dll
 
 
 CLASSES = src/java/org/keplerproject/luajava/CPtr.class \
@@ -31,14 +31,10 @@ CLASSES = src/java/org/keplerproject/luajava/CPtr.class \
 # Targets
 #
 
-run: build clean
+build: dll jar clean
 	@echo ------------------
 	@echo Build Complete
 	@echo ------------------
-
-
-build: jar dll
-
 
 #
 # Build .class files.   $(JAR_FILE)   $(DLL_FILE)
@@ -66,7 +62,8 @@ test:
 	@echo test
 
 clean:
-	-@del src\java\org\keplerproject\luajava\*.class src\c\*.obj *.pdb *.exp *.lib *.exp *.ilk
+	-@del src\java\org\keplerproject\luajava\*.class src\c\*.obj *.exp *.lib
+
 
 
 

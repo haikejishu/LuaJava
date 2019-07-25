@@ -33,7 +33,7 @@ package org.keplerproject.luajava;
  */
 public class LuaState
 {
-  private final static String LUAJAVA_LIB = "luajava-5.3.5";
+  private final static String LUAJAVA_LIB = "luajava-1.0";
 
   final public static Integer LUA_REGISTRYINDEX = new Integer(-1000000 - 1000);//修改
 
