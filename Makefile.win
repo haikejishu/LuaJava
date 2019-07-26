@@ -52,14 +52,14 @@ jar:checkjdk $(CLASSES)
 	@cd ..
 
 dll:
-	 $(CC) $(CFLAGS) /c $(LUA_SRC)/*.c  src\c\luajava.c
+	 @$(CC) $(CFLAGS) /c $(LUA_SRC)/*.c  src\c\luajava.c
 	 -@del  src\c\lua.obj  src\c\luac.obj
-	 link /dll src\c\*.obj   /out:$(DLL_FILE)
+	 @link /dll src\c\*.obj   /out:$(DLL_FILE)
 
 checkjdk:"$(JDK)\bin\java.exe"
 
-test:
-	@echo test
+test:checkjdk
+	@echo test ok
 
 clean:
 	-@del src\java\org\keplerproject\luajava\*.class src\c\*.obj *.exp *.lib
