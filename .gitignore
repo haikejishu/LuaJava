@@ -3,3 +3,4 @@
 *.exp
 *.lib
 *.exe
+*.class
