@@ -21,7 +21,7 @@ passed back to Java.
 
 ### Windows 一键编译
 
-1. 配置 java 环境.
+1. 配置 java 环境. 安装 visual studio.
 
 2. 运行 `OneKeyCompile.bat`.
 
