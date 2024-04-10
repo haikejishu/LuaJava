@@ -4,138 +4,19 @@ Color 0A
 setlocal EnableDelayedExpansion
 cd /d %~dp0
 
-set PROGFILES=%ProgramFiles%
-if not "%ProgramFiles(x86)%" == "" set PROGFILES=%ProgramFiles(x86)%
-
-:start
-
-REM Check if Visual Studio 2021 is installed
-set MSVCDIR="%PROGFILES%\Microsoft Visual Studio\2021"
-set VCVARSALLPATH="%PROGFILES%\Microsoft Visual Studio\2021\Community\VC\Auxiliary\Build\vcvarsall.bat"
-if exist %MSVCDIR% (
-  if exist %VCVARSALLPATH% (
-    set COMPILER_VER="2021"
-    echo Using Visual Studio 2021
-    goto setup_env
-  )
-)
-
-REM Check if Visual Studio 2019 is installed
-set MSVCDIR="%PROGFILES%\Microsoft Visual Studio\2019"
-set VCVARSALLPATH="%PROGFILES%\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat"
-if exist %MSVCDIR% (
-  if exist %VCVARSALLPATH% (
-    set COMPILER_VER="2019"
-    echo Using Visual Studio 2019
-    goto setup_env
-  )
-)
-
-REM Check if Visual Studio 2017 is installed
-set MSVCDIR="%PROGFILES%\Microsoft Visual Studio\2017"
-set VCVARSALLPATH="%PROGFILES%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat"
-if exist %MSVCDIR% (
-  if exist %VCVARSALLPATH% (
-    set COMPILER_VER="2017"
-    echo Using Visual Studio 2017
-    goto setup_env
-  )
-)
-REM Check if Visual Studio 2015 is installed
-set MSVCDIR="%PROGFILES%\Microsoft Visual Studio 14.0"
-set VCVARSALLPATH="%PROGFILES%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
-if exist %MSVCDIR% (
-  if exist %VCVARSALLPATH% (
-    set COMPILER_VER="2015"
-        echo Using Visual Studio 2015
-    goto setup_env
-  )
-)
-REM Check if Visual Studio 2013 is installed
-set MSVCDIR="%PROGFILES%\Microsoft Visual Studio 12.0"
-set VCVARSALLPATH="%PROGFILES%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
-if exist %MSVCDIR% (
-  if exist %VCVARSALLPATH% (
-    set COMPILER_VER="2013"
-    echo Using Visual Studio 2013
-    goto setup_env
-  )
-)
-
-REM Check if Visual Studio 2012 is installed
-set MSVCDIR="%PROGFILES%\Microsoft Visual Studio 11.0"
-set VCVARSALLPATH="%PROGFILES%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
-if exist %MSVCDIR% (
-  if exist %VCVARSALLPATH% (
-    set COMPILER_VER="2012"
-    echo Using Visual Studio 2012
-    goto setup_env
-  )
-)
-
-REM Check if Visual Studio 2010 is installed
-set MSVCDIR="%PROGFILES%\Microsoft Visual Studio 10.0"
-set VCVARSALLPATH="%PROGFILES%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
-if exist %MSVCDIR% (
-  if exist %VCVARSALLPATH% (
-    set COMPILER_VER="2010"
-    echo Using Visual Studio 2010
-    goto setup_env
-  )
-)
-
-REM Check if Visual Studio 2008 is installed
-set MSVCDIR="%PROGFILES%\Microsoft Visual Studio 9.0"
-set VCVARSALLPATH="%PROGFILES%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
-if exist %MSVCDIR% (
-  if exist %VCVARSALLPATH% (
-    set COMPILER_VER="2008"
-    echo Using Visual Studio 2008
-    goto setup_env
-  )
-)
-
-REM Check if Visual Studio 2005 is installed
-set MSVCDIR="%PROGFILES%\Microsoft Visual Studio 8"
-set VCVARSALLPATH="%PROGFILES%\Microsoft Visual Studio 8\VC\vcvarsall.bat"
-if exist %MSVCDIR% (
-  if exist %VCVARSALLPATH% (
-    set COMPILER_VER="2005"
-    echo Using Visual Studio 2005
-    goto setup_env
-  )
-)
-
-REM Check if Visual Studio 6 is installed
-set MSVCDIR="%PROGFILES%\Microsoft Visual Studio\VC98"
-set VCVARSALLPATH="%PROGFILES%\Microsoft Visual Studio\VC98\vcvarsall.bat"
-if exist %MSVCDIR% (
-  if exist %VCVARSALLPATH% (
-    set COMPILER_VER="6"
-    echo Using Visual Studio 6
-    goto setup_env
-  )
-)
-
-set /p "PROGFILES=!PROGFILES! not find Visual Studio, please input new dir:"
-goto start
-
 :setup_env
 
-if %COMPILER_VER% == "6" (
-    call %MSVCDIR%\Bin\VCVARS32.BAT
-    goto begin
-)
-
-if "%JAVA_HOME%" == "" (
-    set /p JAVA_HOME=Enter path to JAVA_HOME:
+rem check vcvarsall commond
+where vcvarsall >nul 2>&1
+if errorlevel 1 (
+    set /p VCVARSALLPATH=Enter path to vcvarsall.bat:
+    if exist !VCVARSALLPATH! (
+       goto begin
+    ) else (
+      goto setup_env
+    )
 ) else (
-    echo JAVA_HOME:%JAVA_HOME%
-)
-
-if not exist "%JAVA_HOME%\bin\java.exe" (
-   echo error JAVA_HOME %JAVA_HOME%
-   goto end
+  set VCVARSALLPATH=vcvarsall
 )
 
 :begin
